@@ -219,7 +219,7 @@
             right: 0;
             bottom: 0;
             background-color: rgba(15, 23, 42, 0.3);
-            backdrop-filter: blur(4px); /* Efek blur premium */
+            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -377,7 +377,8 @@
 
     <script type="module">
         const UserService = {
-            API_URL: './users.json',
+            /* KUNCI GITHUB PAGES: Menggunakan 'users.json' tanpa awalan './' agar routing repositori lancar */
+            API_URL: 'users.json',
             
             async initData() {
                 if (!localStorage.getItem('vanilla_users')) {
@@ -428,7 +429,6 @@
             modalTitle: document.getElementById('modal-title'),
 
             renderTable(users) {
-                // Render Mini Statistik Realtime
                 document.getElementById('stat-total').innerText = users.length;
                 document.getElementById('stat-admin').innerText = users.filter(u => u.role === 'Admin').length;
                 document.getElementById('stat-staff').innerText = users.filter(u => u.role !== 'Admin').length;
@@ -535,6 +535,7 @@
             });
         }
 
+        /* Langsung jalankan fungsi tanpa DOMContentLoaded karena tag script bermutu type="module" */
         App();
     </script>
 </body>
