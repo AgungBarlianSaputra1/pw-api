@@ -3,540 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevTeam Hub - Workspace Dashboard</title>
-    <style>
-        /* --- MODERN RESET & VARIABLES --- */
-        :root {
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --border-color: #e2e8f0;
-            --radius: 0.75rem;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        /* --- HEADER SECTION --- */
-        header {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2.5rem;
-        }
-        @media (min-width: 768px) {
-            header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        h1 {
-            font-size: 1.875rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            color: #1e1b4b;
-        }
-        .subtitle {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-        }
-
-        /* --- ANALYTICS WIDGETS --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
-        }
-        .stat-card {
-            background: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-        }
-        .stat-card p {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .stat-card .num {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 0.5rem;
-            color: var(--primary);
-        }
-
-        /* --- BUTTONS --- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            border-radius: var(--radius);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-        @media (min-width: 768px) {
-            .btn { width: auto; }
-        }
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-        }
-        .btn-primary:hover { 
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background-color: white;
-            border-color: var(--border-color);
-            color: #475569;
-        }
-        .btn-secondary:hover { background-color: #f8fafc; }
-        
-        .btn-action {
-            background: none;
-            border: none;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.375rem;
-            transition: all 0.2s;
-        }
-        .btn-edit { color: var(--primary); }
-        .btn-edit:hover { background: #eef2ff; }
-        .btn-delete { color: var(--danger); }
-        .btn-delete:hover { background: #fef2f2; }
-
-        /* --- MODERN TABLE --- */
-        .table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.9rem;
-            min-width: 700px;
-        }
-        th, td {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        th {
-            background-color: #f8fafc;
-            font-weight: 700;
-            color: #475569;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #fafafa; }
-        
-        /* User Profile Badge Style */
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .avatar-placeholder {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            background: #e2e8f0;
-            color: #4f46e5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        /* --- BADGES (Pill Style) --- */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            border-radius: 9999px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .badge-admin { background-color: #fee2e2; color: #991b1b; }
-        .badge-editor { background-color: #fef3c7; color: #92400e; }
-        .badge-user { background-color: #dcfce7; color: #166534; }
-
-        /* --- MODAL EFFECT --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(15, 23, 42, 0.3);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .modal-wrapper {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-            overflow: hidden;
-            transform: translateY(20px);
-            transition: transform 0.2s ease;
-        }
-        .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-overlay.active .modal-wrapper { transform: translateY(0); }
-
-        .modal-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h3 { font-size: 1.25rem; font-weight: 700; }
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.75rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            line-height: 1;
-        }
-
-        /* --- FORM CONTROLS --- */
-        form { padding: 1.5rem; }
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 0.5rem;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.625rem 0.875rem;
-            font-size: 0.9rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            outline: none;
-            background-color: #f8fafc;
-            transition: all 0.2s;
-        }
-        .form-control:focus {
-            border-color: var(--primary);
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-        }
-        .modal-footer {
-            padding-top: 1.25rem;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-            margin-top: 2rem;
-        }
-    </style>
+    <title>Sistem Manajemen User & Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-100 font-sans antialiased minimal-h-screen">
 
-    <div class="container">
-        <header>
-            <div>
-                <h1>DevTeam Hub</h1>
-                <div class="subtitle">Sistem Manajemen Pengguna & Kontrol Akses Kerja Kontemporer</div>
-            </div>
-            <button id="btn-open-modal" class="btn btn-primary">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                Tambah Anggota
-            </button>
-        </header>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <p>Total Anggota</p>
-                <div class="num" id="stat-total">0</div>
-            </div>
-            <div class="stat-card">
-                <p>Administrator</p>
-                <div class="num" id="stat-admin" style="color: #ef4444;">0</div>
-            </div>
-            <div class="stat-card">
-                <p>Editor & User</p>
-                <div class="num" id="stat-staff" style="color: #10b981;">0</div>
-            </div>
+    <div id="app" class="container mx-auto p-4 max-w-6xl">
+        <div id="global-loader" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
 
-        <main class="table-container">
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Identitas Anggota</th>
-                            <th>Alamat Email</th>
-                            <th>Hak Akses (Role)</th>
-                            <th style="text-align: right; padding-right: 2rem;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table-body"></tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-
-    <div id="user-modal" class="modal-overlay">
-        <div class="modal-wrapper">
-            <div class="modal-header">
-                <h3 id="modal-title">Form Anggota</h3>
-                <button id="btn-close-modal" class="modal-close">&times;</button>
-            </div>
-            <form id="user-form">
-                <input type="hidden" id="form-user-id">
-                
-                <div class="form-group">
-                    <label for="form-username">Nama Pengguna (Username)</label>
-                    <input type="text" id="form-username" class="form-control" required autocomplete="off" placeholder="cth: amandajane">
+        <div id="view-login" class="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow-md hidden">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Masuk ke Sistem</h2>
+            <div id="login-alert" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+            <form id="form-login" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="login-username" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                
-                <div class="form-group">
-                    <label for="form-email">Alamat Email Resmi</label>
-                    <input type="email" id="form-email" class="form-control" required autocomplete="off" placeholder="cth: amanda@company.com">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="login-password" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                
-                <div class="form-group">
-                    <label for="form-role">Level Hak Akses</label>
-                    <select id="form-role" class="form-control">
-                        <option value="User">User (Akses Terbatas)</option>
-                        <option value="Admin">Admin (Akses Penuh)</option>
-                        <option value="Editor">Editor (Akses Konten)</option>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" id="btn-cancel-modal" class="btn btn-secondary">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Data</button>
-                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg font-semibold transition">Login</button>
             </form>
+            <p class="text-xs text-center text-gray-500 mt-4">Hint: admin / admin123</p>
+        </div>
+
+        <div id="view-dashboard" class="hidden space-y-6">
+            <nav class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center flex-wrap gap-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid stroke-amber-500 fa-users text-blue-600 text-2xl"></i>
+                    <span class="text-xl font-bold text-gray-800">UserManagement</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="user-session-name" class="text-gray-600 font-medium"></span>
+                    <button id="btn-logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition">
+                        <i class="fa-solid fa-sign-out-alt"></i> Keluar
+                    </button>
+                </div>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm h-fit">
+                    <h3 id="form-title" class="text-lg font-bold text-gray-800 mb-4">Tambah User Baru</h3>
+                    <form id="form-user" class="space-y-4">
+                        <input type="hidden" id="user-id">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Username</label>
+                            <input type="text" id="user-username" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                            <input type="text" id="user-name" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="user-email" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Role</label>
+                            <select id="user-role" class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <option value="User">User</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2 pt-2">
+                            <button type="submit" id="btn-submit-user" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg font-medium transition">Simpan</button>
+                            <button type="button" id="btn-cancel-edit" class="hidden flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 p-2 rounded-lg font-medium transition">Batal</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm overflow-hidden">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Daftar Pengguna</h3>
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm uppercase">
+                                    <th class="p-3">Username</th>
+                                    <th class="p-3">Nama</th>
+                                    <th class="p-3">Email</th>
+                                    <th class="p-3">Role</th>
+                                    <th class="p-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-table-body" class="divide-y divide-gray-100 text-sm text-gray-700">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        const UserService = {
-            /* KUNCI GITHUB PAGES: Menggunakan 'users.json' tanpa awalan './' agar routing repositori lancar */
-            API_URL: 'users.json',
-            
-            async initData() {
-                if (!localStorage.getItem('vanilla_users')) {
-                    try {
-                        const response = await fetch(this.API_URL);
-                        if (!response.ok) throw new Error('Koneksi data gagal.');
-                        const data = await response.json();
-                        localStorage.setItem('vanilla_users', JSON.stringify(data));
-                    } catch (error) {
-                        console.error('Inisialisasi API Gagal:', error);
-                        localStorage.setItem('vanilla_users', JSON.stringify([]));
+    <script>
+        // ==========================================
+        // 1. INITIAL SEED DATA (Menciptakan users.json di LocalStorage)
+        // ==========================================
+        const DEFAULT_USERS = [
+            { id: 1, username: "admin", name: "Administrator", email: "admin@mail.com", role: "Admin", password: "admin123" },
+            { id: 2, username: "johndoe", name: "John Doe", email: "john@mail.com", role: "User", password: "user123" }
+        ];
+
+        if (!localStorage.getItem('mock_users_json')) {
+            localStorage.setItem('mock_users_json', JSON.stringify(DEFAULT_USERS));
+        }
+
+        // ==========================================
+        // 2. API SERVICE (Menggunakan Fetch Interceptor / Mock)
+        // Scalable: Jika nanti ganti ke backend asli, cukup ubah fungsi fetch di sini saja.
+        // ==========================================
+        const ApiService = {
+            async request(endpoint, options = {}) {
+                document.getElementById('global-loader').classList.remove('hidden');
+                
+                // Simulasi network latency 300ms agar terasa real-world
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                try {
+                    let database = JSON.parse(localStorage.getItem('mock_users_json'));
+                    const { method = 'GET', body } = options;
+
+                    // Menggunakan Fetch bayangan (Mocking Response)
+                    if (endpoint === '/api/login' && method === 'POST') {
+                        const payload = JSON.parse(body);
+                        const user = database.find(u => u.username === payload.username && u.password === payload.password);
+                        if (user) {
+                            return new Response(JSON.stringify({ success: true, user: { username: user.username, name: user.name } }), { status: 200 });
+                        }
+                        return new Response(JSON.stringify({ success: false, message: "Username atau Password salah!" }), { status: 401 });
                     }
+
+                    if (endpoint === '/api/users') {
+                        if (method === 'GET') {
+                            return new Response(JSON.stringify(database), { status: 200 });
+                        }
+                        if (method === 'POST') {
+                            const newUser = JSON.parse(body);
+                            newUser.id = Date.now(); // Simple ID generation
+                            newUser.password = "default123"; // default password untuk user baru
+                            database.push(newUser);
+                            localStorage.setItem('mock_users_json', JSON.stringify(database));
+                            return new Response(JSON.stringify(newUser), { status: 201 });
+                        }
+                    }
+
+                    if (endpoint.startsWith('/api/users/')) {
+                        const id = parseInt(endpoint.split('/').pop());
+                        const index = database.findIndex(u => u.id === id);
+
+                        if (method === 'PUT') {
+                            const updatedData = JSON.parse(body);
+                            database[index] = { ...database[index], ...updatedData };
+                            localStorage.setItem('mock_users_json', JSON.stringify(database));
+                            return new Response(JSON.stringify(database[index]), { status: 200 });
+                        }
+                        if (method === 'DELETE') {
+                            database.splice(index, 1);
+                            localStorage.setItem('mock_users_json', JSON.stringify(database));
+                            return new Response(JSON.stringify({ success: true }), { status: 200 });
+                        }
+                    }
+
+                    return new Response(JSON.stringify({ message: "Not Found" }), { status: 404 });
+                } catch (error) {
+                    console.error("API Error: ", error);
+                } finally {
+                    document.getElementById('global-loader').classList.add('hidden');
                 }
-            },
-
-            getAll() {
-                return JSON.parse(localStorage.getItem('vanilla_users')) || [];
-            },
-
-            getById(id) {
-                return this.getAll().find(user => user.id === parseInt(id));
-            },
-
-            save(user) {
-                const users = this.getAll();
-                if (user.id) {
-                    const index = users.findIndex(u => u.id === parseInt(user.id));
-                    if (index !== -1) users[index] = { ...users[index], ...user, id: parseInt(user.id) };
-                } else {
-                    user.id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-                    users.push(user);
-                }
-                localStorage.setItem('vanilla_users', JSON.stringify(users));
-                return true;
-            },
-
-            delete(id) {
-                const users = this.getAll().filter(user => user.id !== parseInt(id));
-                localStorage.setItem('vanilla_users', JSON.stringify(users));
-                return true;
             }
         };
 
-        const UI = {
-            tableBody: document.getElementById('user-table-body'),
-            modal: document.getElementById('user-modal'),
-            form: document.getElementById('user-form'),
-            modalTitle: document.getElementById('modal-title'),
+        // ==========================================
+        // 3. STATE MANAGEMENT
+        // Konsisten & Terpusat
+        // ==========================================
+        const AppState = {
+            currentUser: JSON.parse(sessionStorage.getItem('session_user')) || null,
+            users: [],
+            
+            setSession(user) {
+                this.currentUser = user;
+                if (user) sessionStorage.setItem('session_user', JSON.stringify(user));
+                else sessionStorage.removeItem('session_user');
+                AppUI.route();
+            },
+
+            async fetchUsers() {
+                const res = await ApiService.request('/api/users');
+                this.users = await res.json();
+                AppUI.renderTable(this.users);
+            }
+        };
+
+        // ==========================================
+        // 4. UI RENDERER & ROUTER
+        // Modular & Responsif
+        // ==========================================
+        const AppUI = {
+            views: {
+                login: document.getElementById('view-login'),
+                dashboard: document.getElementById('view-dashboard')
+            },
+
+            route() {
+                if (AppState.currentUser) {
+                    this.views.login.classList.add('hidden');
+                    this.views.dashboard.classList.remove('hidden');
+                    document.getElementById('user-session-name').innerText = `Halo, ${AppState.currentUser.name}`;
+                    AppState.fetchUsers();
+                } else {
+                    this.views.login.classList.remove('hidden');
+                    this.views.dashboard.classList.add('hidden');
+                }
+            },
 
             renderTable(users) {
-                document.getElementById('stat-total').innerText = users.length;
-                document.getElementById('stat-admin').innerText = users.filter(u => u.role === 'Admin').length;
-                document.getElementById('stat-staff').innerText = users.filter(u => u.role !== 'Admin').length;
-
-                if (users.length === 0) {
-                    this.tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="text-center" style="padding: 3rem; color: #94a3b8;">Belum ada anggota yang terdaftar di workspace ini.</td>
-                        </tr>`;
-                    return;
-                }
-
-                this.tableBody.innerHTML = users.map(user => {
-                    const initial = user.username.charAt(0);
-                    return `
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <div class="avatar-placeholder">${initial}</div>
-                                <div>
-                                    <div style="font-weight: 700; color: #1e293b;">@${user.username}</div>
-                                    <div style="font-size: 0.75rem; color: #94a3b8;">ID Anggota: #${user.id}</div>
-                                </div>
-                            </div>
+                const tbody = document.getElementById('user-table-body');
+                tbody.innerHTML = users.map(user => `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="p-3 font-medium text-gray-900">${user.username}</td>
+                        <td class="p-3">${user.name}</td>
+                        <td class="p-3 text-gray-500">${user.email}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">
+                                ${user.role}
+                            </span>
                         </td>
-                        <td style="color: #475569; font-weight: 500;">${user.email}</td>
-                        <td>
-                            <span class="badge badge-${user.role.toLowerCase()}">${user.role}</span>
+                        <td class="p-3 text-center space-x-2 whitespace-nowrap">
+                            <button onclick="AppUI.handleEditClick(${user.id})" class="text-blue-600 hover:text-blue-900 p-1 transition" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="AppUI.handleDeleteClick(${user.id})" class="text-red-600 hover:text-red-900 p-1 transition" title="Hapus">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </td>
-                        <td style="text-align: right; padding-right: 1.5rem;">
-                            <button data-id="${user.id}" class="btn-action btn-edit">Edit</button>
-                            <button data-id="${user.id}" class="btn-action btn-delete">Hapus</button>
-                        </td>
-                    </tr>`;
-                }).join('');
+                    </tr>
+                `).join('');
             },
 
-            toggleModal(show = true, title = 'Tambah Anggota Baru') {
-                this.modalTitle.innerText = title;
-                if (show) {
-                    this.modal.classList.add('active');
-                } else {
-                    this.modal.classList.remove('active');
-                    this.form.reset();
-                    document.getElementById('form-user-id').value = '';
-                }
+            handleEditClick(id) {
+                const user = AppState.users.find(u => u.id === id);
+                if (!user) return;
+
+                document.getElementById('user-id').value = user.id;
+                document.getElementById('user-username').value = user.username;
+                document.getElementById('user-username').disabled = true; // Username idealnya tidak diubah
+                document.getElementById('user-name').value = user.name;
+                document.getElementById('user-email').value = user.email;
+                document.getElementById('user-role').value = user.role;
+
+                document.getElementById('form-title').innerText = "Edit Data User";
+                document.getElementById('btn-cancel-edit').classList.remove('hidden');
             },
 
-            fillForm(user) {
-                document.getElementById('form-user-id').value = user.id;
-                document.getElementById('form-username').value = user.username;
-                document.getElementById('form-email').value = user.email;
-                document.getElementById('form-role').value = user.role;
+            resetForm() {
+                document.getElementById('form-user').reset();
+                document.getElementById('user-id').value = '';
+                document.getElementById('user-username').disabled = false;
+                document.getElementById('form-title').innerText = "Tambah User Baru";
+                document.getElementById('btn-cancel-edit').classList.add('hidden');
+            },
+
+            async handleDeleteClick(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                    await ApiService.request(`/api/users/${id}`, { method: 'DELETE' });
+                    AppState.fetchUsers();
+                    this.resetForm();
+                }
             }
         };
 
-        async function App() {
-            await UserService.initData();
+        // ==========================================
+        // 5. EVENT HANDLERS (Konektor Antara UI dan State)
+        // DRY Principle Terjaga di sini
+        // ==========================================
+        
+        // Handle Form Login
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const alertBox = document.getElementById('login-alert');
+
+            const res = await ApiService.request('/api/login', {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alertBox.classList.add('hidden');
+                document.getElementById('form-login').reset();
+                AppState.setSession(data.user);
+            } else {
+                alertBox.innerText = data.message;
+                alertBox.classList.remove('hidden');
+            }
+        });
+
+        // Handle Logout
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            AppState.setSession(null);
+        });
+
+        // Handle Create / Update User (REUSE FORM)
+        document.getElementById('form-user').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('user-id').value;
             
-            const refreshUI = () => UI.renderTable(UserService.getAll());
-            refreshUI();
+            const payload = {
+                username: document.getElementById('user-username').value,
+                name: document.getElementById('user-name').value,
+                email: document.getElementById('user-email').value,
+                role: document.getElementById('user-role').value
+            };
 
-            document.getElementById('btn-open-modal').addEventListener('click', () => {
-                UI.toggleModal(true, 'Daftarkan Anggota Baru');
-            });
+            if (id) {
+                // Mode Update (PUT)
+                await ApiService.request(`/api/users/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                // Mode Create (POST)
+                await ApiService.request('/api/users', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            }
 
-            ['btn-close-modal', 'btn-cancel-modal'].forEach(id => {
-                document.getElementById(id).addEventListener('click', () => UI.toggleModal(false));
-            });
+            AppState.fetchUsers();
+            AppUI.resetForm();
+        });
 
-            UI.form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const userData = {
-                    id: document.getElementById('form-user-id').value,
-                    username: document.getElementById('form-username').value,
-                    email: document.getElementById('form-email').value,
-                    role: document.getElementById('form-role').value
-                };
+        // Tombol Batal Edit
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => AppUI.resetForm());
 
-                if (UserService.save(userData)) {
-                    UI.toggleModal(false);
-                    refreshUI();
-                }
-            });
+        // INITIAL LOAD / RUNTIME ENTRY POINT
+        AppUI.route();
 
-            UI.tableBody.addEventListener('click', (e) => {
-                const id = e.target.getAttribute('data-id');
-                if (!id) return;
-
-                if (e.target.classList.contains('btn-edit')) {
-                    const user = UserService.getById(id);
-                    if (user) {
-                        UI.fillForm(user);
-                        UI.toggleModal(true, `Modifikasi Akses: ${user.username}`);
-                    }
-                }
-
-                if (e.target.classList.contains('btn-delete')) {
-                    if (confirm(`Hapus akun @${UserService.getById(id)?.username} dari sistem internal?`)) {
-                        UserService.delete(id);
-                        refreshUI();
-                    }
-                }
-            });
-        }
-
-        /* Langsung jalankan fungsi tanpa DOMContentLoaded karena tag script bermutu type="module" */
-        App();
     </script>
 </body>
 </html>
