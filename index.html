@@ -3,38 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Kelola User - Vanilla CRUD</title>
+    <title>DevTeam Hub - Workspace Dashboard</title>
     <style>
-        /* --- RESET & BASE STYLES --- */
+        /* --- MODERN RESET & VARIABLES --- */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --border-color: #e2e8f0;
+            --radius: 0.75rem;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-            line-height: 1.5;
-            padding: 1rem;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
         }
 
-        /* --- LAYOUT & CONTAINER (Responsif) --- */
         .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
         }
-        
+
+        /* --- HEADER SECTION --- */
         header {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 1.25rem;
+            margin-bottom: 2.5rem;
         }
-        @media (min-width: 640px) {
+        @media (min-width: 768px) {
             header {
                 flex-direction: row;
                 justify-content: space-between;
@@ -43,14 +55,43 @@
         }
 
         h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #111827;
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #1e1b4b;
         }
         .subtitle {
-            font-size: 0.875rem;
-            color: #6b7280;
+            font-size: 0.95rem;
+            color: var(--text-muted);
             margin-top: 0.25rem;
+        }
+
+        /* --- ANALYTICS WIDGETS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+        .stat-card p {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .stat-card .num {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: var(--primary);
         }
 
         /* --- BUTTONS --- */
@@ -58,169 +99,197 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.625rem 1.25rem;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
             font-size: 0.875rem;
-            font-weight: 500;
-            border-radius: 0.5rem;
+            font-weight: 600;
+            border-radius: var(--radius);
             border: 1px solid transparent;
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
+            transition: all 0.2s ease;
             width: 100%;
         }
-        @media (min-width: 640px) {
+        @media (min-width: 768px) {
             .btn { width: auto; }
         }
         .btn-primary {
-            background-color: #2563eb;
+            background-color: var(--primary);
             color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
         }
-        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn-primary:hover { 
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
         .btn-secondary {
             background-color: white;
-            border-color: #d1d5db;
-            color: #374151;
+            border-color: var(--border-color);
+            color: #475569;
         }
-        .btn-secondary:hover { background-color: #f9fafb; }
+        .btn-secondary:hover { background-color: #f8fafc; }
         
-        /* Table Action Buttons */
-        .btn-link {
+        .btn-action {
             background: none;
             border: none;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            padding: 0 0.25rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
         }
-        .btn-edit { color: #2563eb; }
-        .btn-edit:hover { color: #1d4ed8; text-decoration: underline; }
-        .btn-delete { color: #dc2626; }
-        .btn-delete:hover { color: #b91c1c; text-decoration: underline; }
+        .btn-edit { color: var(--primary); }
+        .btn-edit:hover { background: #eef2ff; }
+        .btn-delete { color: var(--danger); }
+        .btn-delete:hover { background: #fef2f2; }
 
-        /* --- DATA TABLE (Responsif dengan Wrapper) --- */
+        /* --- MODERN TABLE --- */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
         .table-responsive {
             width: 100%;
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e5e7eb;
-            overflow-x: auto; /* Kunci responsifitas tabel */
+            overflow-x: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 0.875rem;
-            min-width: 600px; /* Mencegah tabel gepeng di layar kecil */
+            font-size: 0.9rem;
+            min-width: 700px;
         }
         th, td {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
         th {
-            background-color: #f9fafb;
-            font-weight: 600;
-            color: #4b5563;
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: #475569;
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #f9fafb; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; color: #9ca3af; }
+        tr:hover td { background-color: #fafafa; }
+        
+        /* User Profile Badge Style */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .avatar-placeholder {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
 
-        /* --- BADGES (Role) --- */
+        /* --- BADGES (Pill Style) --- */
         .badge {
             display: inline-flex;
-            padding: 0.25rem 0.625rem;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 700;
             border-radius: 9999px;
-            border: 1px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .badge-admin { background-color: #fef2f2; color: #991b1b; border-color: #fee2e2; }
-        .badge-editor { background-color: #fffbeb; color: #92400e; border-color: #fef3c7; }
-        .badge-user { background-color: #f0fdf4; color: #166534; border-color: #dcfce7; }
+        .badge-admin { background-color: #fee2e2; color: #991b1b; }
+        .badge-editor { background-color: #fef3c7; color: #92400e; }
+        .badge-user { background-color: #dcfce7; color: #166534; }
 
-        /* --- MODAL DIALOG --- */
+        /* --- MODAL EFFECT --- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(17, 24, 39, 0.5);
-            display: none; /* Dikontrol via JS (flex/none) */
+            background-color: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(4px); /* Efek blur premium */
+            display: none;
             align-items: center;
             justify-content: center;
             padding: 1rem;
             z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
         .modal-wrapper {
-            background: white;
-            border-radius: 0.75rem;
+            background: var(--bg-card);
+            border-radius: var(--radius);
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            max-width: 480px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
             overflow: hidden;
-            transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
         }
-        /* State animasi modal */
-        .modal-overlay.active { display: flex; }
-        .modal-overlay.active .modal-wrapper { transform: scale(1); opacity: 1; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-overlay.active .modal-wrapper { transform: translateY(0); }
 
         .modal-header {
-            padding: 1rem 1.5rem;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .modal-header h3 { font-size: 1.125rem; font-weight: 600; }
+        .modal-header h3 { font-size: 1.25rem; font-weight: 700; }
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             cursor: pointer;
-            color: #9ca3af;
+            color: var(--text-muted);
+            line-height: 1;
         }
-        .modal-close:hover { color: #4b5563; }
 
         /* --- FORM CONTROLS --- */
         form { padding: 1.5rem; }
         .form-group { margin-bottom: 1.25rem; }
         .form-group label {
             display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #4b5563;
-            margin-bottom: 0.375rem;
-            letter-spacing: 0.05em;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.5rem;
         }
         .form-control {
             width: 100%;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #f8fafc;
+            transition: all 0.2s;
         }
         .form-control:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
         .modal-footer {
             padding-top: 1.25rem;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: flex-end;
-            gap: 0.5rem;
-            margin-top: 1.75rem;
+            gap: 0.75rem;
+            margin-top: 2rem;
         }
     </style>
 </head>
@@ -229,70 +298,84 @@
     <div class="container">
         <header>
             <div>
-                <h1>Manajemen Pengguna</h1>
-                <div class="subtitle">Kelola data login, email, dan role user secara realtime.</div>
+                <h1>DevTeam Hub</h1>
+                <div class="subtitle">Sistem Manajemen Pengguna & Kontrol Akses Kerja Kontemporer</div>
             </div>
-            <button id="btn-open-modal" class="btn btn-primary">+ Tambah User Baru</button>
+            <button id="btn-open-modal" class="btn btn-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                Tambah Anggota
+            </button>
         </header>
 
-        <main class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th class="text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="user-table-body">
-                    </tbody>
-            </table>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p>Total Anggota</p>
+                <div class="num" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+                <p>Administrator</p>
+                <div class="num" id="stat-admin" style="color: #ef4444;">0</div>
+            </div>
+            <div class="stat-card">
+                <p>Editor & User</p>
+                <div class="num" id="stat-staff" style="color: #10b981;">0</div>
+            </div>
+        </div>
+
+        <main class="table-container">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Identitas Anggota</th>
+                            <th>Alamat Email</th>
+                            <th>Hak Akses (Role)</th>
+                            <th style="text-align: right; padding-right: 2rem;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body"></tbody>
+                </table>
+            </div>
         </main>
     </div>
 
     <div id="user-modal" class="modal-overlay">
         <div class="modal-wrapper">
             <div class="modal-header">
-                <h3 id="modal-title">Tambah User</h3>
+                <h3 id="modal-title">Form Anggota</h3>
                 <button id="btn-close-modal" class="modal-close">&times;</button>
             </div>
             <form id="user-form">
                 <input type="hidden" id="form-user-id">
                 
                 <div class="form-group">
-                    <label for="form-username">Username</label>
-                    <input type="text" id="form-username" class="form-control" required autocomplete="off">
+                    <label for="form-username">Nama Pengguna (Username)</label>
+                    <input type="text" id="form-username" class="form-control" required autocomplete="off" placeholder="cth: amandajane">
                 </div>
                 
                 <div class="form-group">
-                    <label for="form-email">Email</label>
-                    <input type="email" id="form-email" class="form-control" required autocomplete="off">
+                    <label for="form-email">Alamat Email Resmi</label>
+                    <input type="email" id="form-email" class="form-control" required autocomplete="off" placeholder="cth: amanda@company.com">
                 </div>
                 
                 <div class="form-group">
-                    <label for="form-role">Role</label>
+                    <label for="form-role">Level Hak Akses</label>
                     <select id="form-role" class="form-control">
-                        <option value="User">User</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Editor">Editor</option>
+                        <option value="User">User (Akses Terbatas)</option>
+                        <option value="Admin">Admin (Akses Penuh)</option>
+                        <option value="Editor">Editor (Akses Konten)</option>
                     </select>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" id="btn-cancel-modal" class="btn btn-secondary">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script type="module">
-        
-        /**
-         * 1. DATA LAYER (Membaca API JSON & Mengelola State Lokal)
-         */
         const UserService = {
             API_URL: './users.json',
             
@@ -321,11 +404,9 @@
             save(user) {
                 const users = this.getAll();
                 if (user.id) {
-                    // Logika Update (DRY)
                     const index = users.findIndex(u => u.id === parseInt(user.id));
                     if (index !== -1) users[index] = { ...users[index], ...user, id: parseInt(user.id) };
                 } else {
-                    // Logika Create (Auto Increment ID)
                     user.id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
                     users.push(user);
                 }
@@ -340,9 +421,6 @@
             }
         };
 
-        /**
-         * 2. UI RENDERER LAYER (Manipulasi DOM & Konsistensi Tampilan)
-         */
         const UI = {
             tableBody: document.getElementById('user-table-body'),
             modal: document.getElementById('user-modal'),
@@ -350,32 +428,45 @@
             modalTitle: document.getElementById('modal-title'),
 
             renderTable(users) {
+                // Render Mini Statistik Realtime
+                document.getElementById('stat-total').innerText = users.length;
+                document.getElementById('stat-admin').innerText = users.filter(u => u.role === 'Admin').length;
+                document.getElementById('stat-staff').innerText = users.filter(u => u.role !== 'Admin').length;
+
                 if (users.length === 0) {
                     this.tableBody.innerHTML = `
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada data user tersedia.</td>
+                            <td colspan="4" class="text-center" style="padding: 3rem; color: #94a3b8;">Belum ada anggota yang terdaftar di workspace ini.</td>
                         </tr>`;
                     return;
                 }
 
-                // Me-render baris tabel secara konsisten dengan Vanilla CSS Badge
-                this.tableBody.innerHTML = users.map(user => `
+                this.tableBody.innerHTML = users.map(user => {
+                    const initial = user.username.charAt(0);
+                    return `
                     <tr>
-                        <td style="font-family: monospace; color: #9ca3af;">#${user.id}</td>
-                        <td style="font-weight: 500;">${user.username}</td>
-                        <td>${user.email}</td>
+                        <td>
+                            <div class="user-info">
+                                <div class="avatar-placeholder">${initial}</div>
+                                <div>
+                                    <div style="font-weight: 700; color: #1e293b;">@${user.username}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">ID Anggota: #${user.id}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color: #475569; font-weight: 500;">${user.email}</td>
                         <td>
                             <span class="badge badge-${user.role.toLowerCase()}">${user.role}</span>
                         </td>
-                        <td class="text-right">
-                            <button data-id="${user.id}" class="btn-link btn-edit">Edit</button>
-                            <button data-id="${user.id}" class="btn-link btn-delete">Hapus</button>
+                        <td style="text-align: right; padding-right: 1.5rem;">
+                            <button data-id="${user.id}" class="btn-action btn-edit">Edit</button>
+                            <button data-id="${user.id}" class="btn-action btn-delete">Hapus</button>
                         </td>
-                    </tr>
-                `).join('');
+                    </tr>`;
+                }).join('');
             },
 
-            toggleModal(show = true, title = 'Tambah User') {
+            toggleModal(show = true, title = 'Tambah Anggota Baru') {
                 this.modalTitle.innerText = title;
                 if (show) {
                     this.modal.classList.add('active');
@@ -394,28 +485,20 @@
             }
         };
 
-        /**
-         * 3. CONTROLLER LAYER (Alur Logika Jalannya Aplikasi)
-         */
         async function App() {
-            // Ambil data awal dari fetch JSON
             await UserService.initData();
             
-            // Render UI pertama kali
             const refreshUI = () => UI.renderTable(UserService.getAll());
             refreshUI();
 
-            // Aksi Buka Modal
             document.getElementById('btn-open-modal').addEventListener('click', () => {
-                UI.toggleModal(true, 'Tambah User Baru');
+                UI.toggleModal(true, 'Daftarkan Anggota Baru');
             });
 
-            // Aksi Tutup Modal (Gruping ID untuk memangkas duplikasi baris kode)
             ['btn-close-modal', 'btn-cancel-modal'].forEach(id => {
                 document.getElementById(id).addEventListener('click', () => UI.toggleModal(false));
             });
 
-            // Simpan Data (Create / Update)
             UI.form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const userData = {
@@ -431,7 +514,6 @@
                 }
             });
 
-            // Event Delegation (Scalable: Mengikat handler klik langsung pada induk tabel)
             UI.tableBody.addEventListener('click', (e) => {
                 const id = e.target.getAttribute('data-id');
                 if (!id) return;
@@ -440,12 +522,12 @@
                     const user = UserService.getById(id);
                     if (user) {
                         UI.fillForm(user);
-                        UI.toggleModal(true, `Edit User: ${user.username}`);
+                        UI.toggleModal(true, `Modifikasi Akses: ${user.username}`);
                     }
                 }
 
                 if (e.target.classList.contains('btn-delete')) {
-                    if (confirm(`Apakah Anda yakin ingin menghapus user dengan ID #${id}?`)) {
+                    if (confirm(`Hapus akun @${UserService.getById(id)?.username} dari sistem internal?`)) {
                         UserService.delete(id);
                         refreshUI();
                     }
@@ -453,8 +535,7 @@
             });
         }
 
-        // Jalankan Aplikasi setelah DOM siap
-        document.addEventListener('DOMContentLoaded', App);
+        App();
     </script>
 </body>
 </html>
