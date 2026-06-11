@@ -3,147 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen User & Login</title>
+    <title>DevTeam Hub - Workspace Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.05), transparent 40%),
+                        #0f172a; /* Slate 900 Deep Dark */
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* Slate 800 dengan opasitas */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased minimal-h-screen">
+<body class="text-slate-200 min-h-screen antialiased flex flex-col justify-between">
 
-    <div id="app" class="container mx-auto p-4 max-w-6xl">
-        <div id="global-loader" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    <div id="global-loader" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-md flex justify-center items-center z-50 transition-all duration-300">
+        <div class="relative flex items-center justify-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
+            <i class="fa-solid fa-terminal text-indigo-400 absolute animate-pulse"></i>
         </div>
+    </div>
 
-        <div id="view-login" class="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow-md hidden">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Masuk ke Sistem</h2>
-            <div id="login-alert" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"></div>
-            <form id="form-login" class="space-y-4">
+    <main id="app" class="container mx-auto p-4 md:p-6 max-w-6xl my-auto">
+        
+        <div id="view-login" class="max-w-md mx-auto my-12 glass-card p-8 rounded-2xl shadow-2xl transition-all duration-500 transform scale-100 hidden">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mb-4 text-2xl">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+                <h2 class="text-2xl font-bold tracking-tight text-white">Welcome Back</h2>
+                <p class="text-sm text-slate-400 mt-1">Sign in to manage your workspace team</p>
+            </div>
+
+            <div id="login-alert" class="hidden mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation"></i> <span id="alert-text"></span>
+            </div>
+
+            <form id="form-login" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="text" id="login-username" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Username</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="text" id="login-username" required placeholder="Enter admin" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="login-password" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="password" id="login-password" required placeholder="Enter admin123" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition">
+                    </div>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg font-semibold transition">Login</button>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition duration-300 flex justify-center items-center gap-2 text-sm mt-2">
+                    Sign In <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
             </form>
-            <p class="text-xs text-center text-gray-500 mt-4">Hint: admin / admin123</p>
         </div>
 
         <div id="view-dashboard" class="hidden space-y-6">
-            <nav class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center flex-wrap gap-4">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid stroke-amber-500 fa-users text-blue-600 text-2xl"></i>
-                    <span class="text-xl font-bold text-gray-800">UserManagement</span>
+            <header class="glass-card p-4 rounded-2xl flex justify-between items-center flex-wrap gap-4 shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold text-white tracking-tight block">DevTeam<span class="text-indigo-400">Hub</span></span>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold block -mt-1">Workspace Manager</span>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span id="user-session-name" class="text-gray-600 font-medium"></span>
-                    <button id="btn-logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition">
-                        <i class="fa-solid fa-sign-out-alt"></i> Keluar
+                    <div class="flex items-center gap-2 bg-slate-900/40 border border-slate-700/50 px-3 py-1.5 rounded-xl text-xs font-medium">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span id="user-session-name" class="text-slate-300"></span>
+                    </div>
+                    <button id="btn-logout" class="bg-slate-800 hover:bg-red-900/40 text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-500/30 px-3 py-1.5 rounded-xl text-xs flex items-center gap-2 transition duration-300">
+                        <i class="fa-solid fa-power-off"></i> Logout
                     </button>
                 </div>
-            </nav>
+            </header>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm h-fit">
-                    <h3 id="form-title" class="text-lg font-bold text-gray-800 mb-4">Tambah User Baru</h3>
+                <div class="glass-card p-6 rounded-2xl shadow-xl h-fit">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+                            <i id="form-icon" class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <h3 id="form-title" class="text-base font-bold text-white">Add New Member</h3>
+                    </div>
+                    
                     <form id="form-user" class="space-y-4">
                         <input type="hidden" id="user-id">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Username</label>
-                            <input type="text" id="user-username" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Username</label>
+                            <input type="text" id="user-username" required placeholder="e.g. janesmith" class="w-full p-2.5 bg-slate-900/60 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                            <input type="text" id="user-name" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Full Name</label>
+                            <input type="text" id="user-name" required placeholder="e.g. Jane Smith" class="w-full p-2.5 bg-slate-900/60 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" id="user-email" required class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email Address</label>
+                            <input type="email" id="user-email" required placeholder="jane@company.com" class="w-full p-2.5 bg-slate-900/60 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Role</label>
-                            <select id="user-role" class="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                                <option value="User">User</option>
-                                <option value="Admin">Admin</option>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Role Assignment</label>
+                            <select id="user-role" class="w-full p-2.5 bg-slate-900/60 border border-slate-700 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-white text-sm transition appearance-none">
+                                <option value="User" class="bg-slate-800 text-slate-200">Developer</option>
+                                <option value="Admin" class="bg-slate-800 text-slate-200">System Admin</option>
                             </select>
                         </div>
-                        <div class="flex space-x-2 pt-2">
-                            <button type="submit" id="btn-submit-user" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg font-medium transition">Simpan</button>
-                            <button type="button" id="btn-cancel-edit" class="hidden flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 p-2 rounded-lg font-medium transition">Batal</button>
+                        <div class="flex space-x-2 pt-3">
+                            <button type="submit" id="btn-submit-user" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white p-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/10 transition duration-300">Save Member</button>
+                            <button type="button" id="btn-cancel-edit" class="hidden flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl text-sm font-medium border border-slate-700 transition">Cancel</button>
                         </div>
                     </form>
                 </div>
 
-                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm overflow-hidden">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">Daftar Pengguna</h3>
-                    <div class="overflow-x-auto w-full">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm uppercase">
-                                    <th class="p-3">Username</th>
-                                    <th class="p-3">Nama</th>
-                                    <th class="p-3">Email</th>
-                                    <th class="p-3">Role</th>
-                                    <th class="p-3 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="user-table-body" class="divide-y divide-gray-100 text-sm text-gray-700">
-                                </tbody>
-                        </table>
+                <div class="lg:col-span-2 glass-card p-6 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-address-book"></i>
+                                </div>
+                                <h3 class="text-base font-bold text-white">Team Directory</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-700/60 text-slate-400 text-xs uppercase tracking-wider font-semibold">
+                                        <th class="pb-3 px-2">Member</th>
+                                        <th class="pb-3 px-2">Email</th>
+                                        <th class="pb-3 px-2">Role</th>
+                                        <th class="pb-3 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table-body" class="divide-y divide-slate-800/60 text-xs text-slate-300">
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="text-center py-6 text-xs text-slate-500 font-medium">
+        &copy; 2026 DevTeam Hub. Built with Modular CSS & Fetch Client.
+    </footer>
 
     <script>
-        // ==========================================
-        // 1. INITIAL SEED DATA (Menciptakan users.json di LocalStorage)
-        // ==========================================
+        // 1. SEED DATA MOCKING (users.json simulation)
         const DEFAULT_USERS = [
-            { id: 1, username: "admin", name: "Administrator", email: "admin@mail.com", role: "Admin", password: "admin123" },
-            { id: 2, username: "johndoe", name: "John Doe", email: "john@mail.com", role: "User", password: "user123" }
+            { id: 1, username: "admin", name: "Agung Barlian", email: "agung@devteam.io", role: "Admin", password: "admin123" },
+            { id: 2, username: "janesmith", name: "Jane Smith", email: "jane@devteam.io", role: "User", password: "user123" }
         ];
 
         if (!localStorage.getItem('mock_users_json')) {
             localStorage.setItem('mock_users_json', JSON.stringify(DEFAULT_USERS));
         }
 
-        // ==========================================
-        // 2. API SERVICE (Menggunakan Fetch Interceptor / Mock)
-        // Scalable: Jika nanti ganti ke backend asli, cukup ubah fungsi fetch di sini saja.
-        // ==========================================
+        // 2. FETCH SERVICE INTERCEPTOR
         const ApiService = {
             async request(endpoint, options = {}) {
                 document.getElementById('global-loader').classList.remove('hidden');
-                
-                // Simulasi network latency 300ms agar terasa real-world
-                await new Promise(resolve => setTimeout(resolve, 300));
+                await new Promise(resolve => setTimeout(resolve, 400)); // Smooth networking delay
 
                 try {
                     let database = JSON.parse(localStorage.getItem('mock_users_json'));
                     const { method = 'GET', body } = options;
 
-                    // Menggunakan Fetch bayangan (Mocking Response)
                     if (endpoint === '/api/login' && method === 'POST') {
                         const payload = JSON.parse(body);
                         const user = database.find(u => u.username === payload.username && u.password === payload.password);
-                        if (user) {
-                            return new Response(JSON.stringify({ success: true, user: { username: user.username, name: user.name } }), { status: 200 });
-                        }
-                        return new Response(JSON.stringify({ success: false, message: "Username atau Password salah!" }), { status: 401 });
+                        if (user) return new Response(JSON.stringify({ success: true, user: { username: user.username, name: user.name } }), { status: 200 });
+                        return new Response(JSON.stringify({ success: false, message: "Invalid credentials token." }), { status: 401 });
                     }
 
                     if (endpoint === '/api/users') {
-                        if (method === 'GET') {
-                            return new Response(JSON.stringify(database), { status: 200 });
-                        }
+                        if (method === 'GET') return new Response(JSON.stringify(database), { status: 200 });
                         if (method === 'POST') {
                             const newUser = JSON.parse(body);
-                            newUser.id = Date.now(); // Simple ID generation
-                            newUser.password = "default123"; // default password untuk user baru
+                            newUser.id = Date.now();
+                            newUser.password = "pass123";
                             database.push(newUser);
                             localStorage.setItem('mock_users_json', JSON.stringify(database));
                             return new Response(JSON.stringify(newUser), { status: 201 });
@@ -166,20 +224,15 @@
                             return new Response(JSON.stringify({ success: true }), { status: 200 });
                         }
                     }
-
-                    return new Response(JSON.stringify({ message: "Not Found" }), { status: 404 });
-                } catch (error) {
-                    console.error("API Error: ", error);
+                } catch (e) {
+                    console.error("Fetch Intercept Error", e);
                 } finally {
                     document.getElementById('global-loader').classList.add('hidden');
                 }
             }
         };
 
-        // ==========================================
-        // 3. STATE MANAGEMENT
-        // Konsisten & Terpusat
-        // ==========================================
+        // 3. CENTRALIZED APPLICATION STATE
         const AppState = {
             currentUser: JSON.parse(sessionStorage.getItem('session_user')) || null,
             users: [],
@@ -198,10 +251,7 @@
             }
         };
 
-        // ==========================================
-        // 4. UI RENDERER & ROUTER
-        // Modular & Responsif
-        // ==========================================
+        // 4. MODERN UI RENDERERS
         const AppUI = {
             views: {
                 login: document.getElementById('view-login'),
@@ -212,7 +262,7 @@
                 if (AppState.currentUser) {
                     this.views.login.classList.add('hidden');
                     this.views.dashboard.classList.remove('hidden');
-                    document.getElementById('user-session-name').innerText = `Halo, ${AppState.currentUser.name}`;
+                    document.getElementById('user-session-name').innerText = AppState.currentUser.name;
                     AppState.fetchUsers();
                 } else {
                     this.views.login.classList.remove('hidden');
@@ -223,21 +273,30 @@
             renderTable(users) {
                 const tbody = document.getElementById('user-table-body');
                 tbody.innerHTML = users.map(user => `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="p-3 font-medium text-gray-900">${user.username}</td>
-                        <td class="p-3">${user.name}</td>
-                        <td class="p-3 text-gray-500">${user.email}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">
-                                ${user.role}
+                    <tr class="hover:bg-slate-800/30 transition duration-200">
+                        <td class="py-3.5 px-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs text-indigo-300 border border-slate-600">
+                                    ${user.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <span class="block font-semibold text-white">${user.name}</span>
+                                    <span class="block text-[11px] text-slate-500">@${user.username}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-2 text-slate-400 font-medium">${user.email}</td>
+                        <td class="py-3.5 px-2">
+                            <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'}">
+                                ${user.role === 'Admin' ? 'Sys Admin' : 'Developer'}
                             </span>
                         </td>
-                        <td class="p-3 text-center space-x-2 whitespace-nowrap">
-                            <button onclick="AppUI.handleEditClick(${user.id})" class="text-blue-600 hover:text-blue-900 p-1 transition" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                        <td class="py-3.5 text-center space-x-1 whitespace-nowrap">
+                            <button onclick="AppUI.handleEditClick(${user.id})" class="h-7 w-7 rounded-lg bg-slate-800 hover:bg-indigo-600/20 text-slate-400 hover:text-indigo-400 border border-slate-700 hover:border-indigo-500/30 transition duration-200" title="Edit">
+                                <i class="fa-solid fa-user-pen text-xs"></i>
                             </button>
-                            <button onclick="AppUI.handleDeleteClick(${user.id})" class="text-red-600 hover:text-red-900 p-1 transition" title="Hapus">
-                                <i class="fa-solid fa-trash"></i>
+                            <button onclick="AppUI.handleDeleteClick(${user.id})" class="h-7 w-7 rounded-lg bg-slate-800 hover:bg-red-600/20 text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-500/30 transition duration-200" title="Delete">
+                                <i class="fa-solid fa-user-minus text-xs"></i>
                             </button>
                         </td>
                     </tr>
@@ -250,12 +309,13 @@
 
                 document.getElementById('user-id').value = user.id;
                 document.getElementById('user-username').value = user.username;
-                document.getElementById('user-username').disabled = true; // Username idealnya tidak diubah
+                document.getElementById('user-username').disabled = true;
                 document.getElementById('user-name').value = user.name;
                 document.getElementById('user-email').value = user.email;
                 document.getElementById('user-role').value = user.role;
 
-                document.getElementById('form-title').innerText = "Edit Data User";
+                document.getElementById('form-title').innerText = "Edit Workspace Member";
+                document.getElementById('form-icon').className = "fa-solid fa-user-gear";
                 document.getElementById('btn-cancel-edit').classList.remove('hidden');
             },
 
@@ -263,12 +323,13 @@
                 document.getElementById('form-user').reset();
                 document.getElementById('user-id').value = '';
                 document.getElementById('user-username').disabled = false;
-                document.getElementById('form-title').innerText = "Tambah User Baru";
+                document.getElementById('form-title').innerText = "Add New Member";
+                document.getElementById('form-icon').className = "fa-solid fa-user-plus";
                 document.getElementById('btn-cancel-edit').classList.add('hidden');
             },
 
             async handleDeleteClick(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                if (confirm('Are you sure you want to remove this member from workspace?')) {
                     await ApiService.request(`/api/users/${id}`, { method: 'DELETE' });
                     AppState.fetchUsers();
                     this.resetForm();
@@ -276,12 +337,7 @@
             }
         };
 
-        // ==========================================
-        // 5. EVENT HANDLERS (Konektor Antara UI dan State)
-        // DRY Principle Terjaga di sini
-        // ==========================================
-        
-        // Handle Form Login
+        // 5. DECOUPLED EVENT HANDLERS
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
@@ -299,21 +355,16 @@
                 document.getElementById('form-login').reset();
                 AppState.setSession(data.user);
             } else {
-                alertBox.innerText = data.message;
+                document.getElementById('alert-text').innerText = data.message;
                 alertBox.classList.remove('hidden');
             }
         });
 
-        // Handle Logout
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            AppState.setSession(null);
-        });
+        document.getElementById('btn-logout').addEventListener('click', () => AppState.setSession(null));
 
-        // Handle Create / Update User (REUSE FORM)
         document.getElementById('form-user').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('user-id').value;
-            
             const payload = {
                 username: document.getElementById('user-username').value,
                 name: document.getElementById('user-name').value,
@@ -322,29 +373,7 @@
             };
 
             if (id) {
-                // Mode Update (PUT)
-                await ApiService.request(`/api/users/${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(payload)
-                });
+                await ApiService.request(`/api/users/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
             } else {
-                // Mode Create (POST)
-                await ApiService.request('/api/users', {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
+                await ApiService.request('/api/users', { method: 'POST', body: JSON.stringify(payload) });
             }
-
-            AppState.fetchUsers();
-            AppUI.resetForm();
-        });
-
-        // Tombol Batal Edit
-        document.getElementById('btn-cancel-edit').addEventListener('click', () => AppUI.resetForm());
-
-        // INITIAL LOAD / RUNTIME ENTRY POINT
-        AppUI.route();
-
-    </script>
-</body>
-</html>
