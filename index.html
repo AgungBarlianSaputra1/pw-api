@@ -232,9 +232,18 @@
             }
         };
 
-        // 3. CENTRALIZED APPLICATION STATE
+        // 3. CENTRALIZED APPLICATION STATE (Safe Session Loading)
         const AppState = {
-            currentUser: JSON.parse(sessionStorage.getItem('session_user')) || null,
+            currentUser: (() => {
+                try {
+                    const user = sessionStorage.getItem('session_user');
+                    return user ? JSON.parse(user) : null;
+                } catch (e) {
+                    // Jika data session rusak di browser, otomatis dibersihkan
+                    sessionStorage.removeItem('session_user');
+                    return null;
+                }
+            })(),
             users: [],
             
             setSession(user) {
@@ -272,20 +281,21 @@
 
             renderTable(users) {
                 const tbody = document.getElementById('user-table-body');
+                if(!tbody) return;
                 tbody.innerHTML = users.map(user => `
                     <tr class="hover:bg-slate-800/30 transition duration-200">
                         <td class="py-3.5 px-2">
                             <div class="flex items-center gap-3">
                                 <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs text-indigo-300 border border-slate-600">
-                                    ${user.name.charAt(0)}
+                                    ${user.name ? user.name.charAt(0) : 'U'}
                                 </div>
                                 <div>
-                                    <span class="block font-semibold text-white">${user.name}</span>
-                                    <span class="block text-[11px] text-slate-500">@${user.username}</span>
+                                    <span class="block font-semibold text-white">${user.name || ''}</span>
+                                    <span class="block text-[11px] text-slate-500">@${user.username || ''}</span>
                                 </div>
                             </div>
                         </td>
-                        <td class="py-3.5 px-2 text-slate-400 font-medium">${user.email}</td>
+                        <td class="py-3.5 px-2 text-slate-400 font-medium">${user.email || ''}</td>
                         <td class="py-3.5 px-2">
                             <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'}">
                                 ${user.role === 'Admin' ? 'Sys Admin' : 'Developer'}
@@ -377,3 +387,14 @@
             } else {
                 await ApiService.request('/api/users', { method: 'POST', body: JSON.stringify(payload) });
             }
+            AppState.fetchUsers();
+            AppUI.resetForm();
+        });
+
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => AppUI.resetForm());
+
+        // RUNTIME START
+        AppUI.route();
+    </script>
+</body>
+</html>
